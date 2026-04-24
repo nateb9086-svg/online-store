@@ -11,8 +11,29 @@ public class App {
         System.out.println("Welcome to the online store!");
         homeScreen(scanner);
     }
+    public static HashMap<String, Product> loadInventory () {
+        HashMap<String, Product> products = new HashMap<> ();
+        try{
+            BufferedReader buffReader = new BufferedReader(new FileReader("src/main/resources/products.csv"));
+            String productItem;
+            buffReader.readLine();
+            while((productItem = buffReader.readLine()) != null) {
+                String[] splitProductItem = productItem.split(Pattern.quote("|" ));
+                String sku = splitProductItem[0];
+                String productName = splitProductItem[1];
+                double price = Double.parseDouble(splitProductItem[2]);
+                String department = splitProductItem[3];
+                Product product = new Product(sku, productName, department, price);
+                products.put(sku, product);
+
+        }buffReader.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+        return products;
 
     public static void homeScreen(Scanner scanner) {
+
 
         while (true) {
             System.out.println("Select from the following option: ");
@@ -59,12 +80,14 @@ public class App {
 
             switch (userOption) {
                 case 1:
-                    for (Product p : products.values()) {
+                    for (Product p: products.values()) {
+                        String input = products.readline();
                         System.out.printf("%s: $%.2f%n", p.getProductName(), p.getPrice());
                     }
                     formatSpaces();
                     break;
                 case 2:
+
 
                     break;
                 case 3:
@@ -83,8 +106,7 @@ public class App {
         }
     }
 
-    public static HashMap<String, Product> loadInventory () {
-        HashMap<String, Product> products = new HashMap<> ();
+
 
         try{
             BufferedReader buffReader = new BufferedReader(new FileReader("src/main/resources/products.csv"));
